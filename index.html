@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Budget Manager</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Daily Budget Manager</h1>
+    </header>
+    <main>
+        <!-- Section to set the daily budget -->
+        <section id="budget-setter">
+    <h2>Set Your Start Date and Daily Budget</h2>
+    <input type="date" id="start-date" value="2023-12-29">
+    <input type="number" id="daily-budget" placeholder="Enter your daily budget" value="32">
+    <button id="set-budget">Set Budget</button>
+</section>
+
+        <!-- Section to add expenses -->
+       <section id="expense-tracker">
+    <h2>Add an Expense</h2>
+    <input type="text" id="expense-name" placeholder="Expense Name">
+    <input type="number" id="expense-amount" placeholder="Amount">
+    <input type="date" id="expense-date" placeholder="Date of Expense">
+    <button id="add-expense">Add Expense</button>
+</section>
+
+		
+		<section id="budget-display">
+    <h2>Daily Budget Overview</h2>
+    <div id="budget-status">
+        <!-- Budget status will be displayed here -->
+    </div>
+    <div id="calendar-view">
+    <div id="month-navigation">
+        <button id="prev-month">&lt; Prev</button>
+        <span id="month-year-display"></span>
+        <button id="next-month">Next &gt;</button>
+    </div>
+    <div id="calendar-days">
+        <!-- Calendar days will be dynamically populated -->
+    </div>
+</div>
+</section>
+
+<div id="expense-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-date">Expenses for Date</h2>
+        <ul id="modal-expenses-list">
+            <!-- Expenses will be listed here -->
+        </ul>
+    </div>
+</div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Daily Budget Manager</p>
+    </footer>
+    <script src="script.js"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>
