@@ -54,9 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCalendar();
     });
 
-    document.getElementById('add-expense2').addEventListener('click', function() {
-        updateCalendar();
-    });
 
     // Event listeners for navigating between months
     document.getElementById('prev-month').addEventListener('click', function() {
