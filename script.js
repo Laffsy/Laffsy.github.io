@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentYear = new Date().getFullYear(); // Current year
     let accumulatedBudget = 0; // Accumulated budget
     let lastCalculatedDate; // Last date for which budget was calculated
+    let boolToggle = false;
 
     // Event listener for setting the budget
     document.getElementById('set-budget').addEventListener('click', function() {
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const expenseAmount = parseFloat(document.getElementById('expense-amount').value);
         let expenseDateInput = document.getElementById('expense-date').value;
         let expenseDate = new Date(expenseDateInput + 'T00:00:00');
-        
+        boolToggle = true;
 
         // Add the expense to the expenses array
         expenses.push({
@@ -148,8 +149,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentDate >= startDate) {
                 console.log('currentDate >= startDate');
                 let dayString = currentDate.toISOString().split('T')[0];
-                console.log('daystring = ' + dayString)
+                //console.log('daystring = ' + dayString)
                 let totalExpensesForDay = expenses.filter(expense => expense.date === dayString).reduce((total, expense) => total + expense.amount, 0);
+                //console.log('toalExpensesForDay = ' + totalExpensesForDay)
+                if (boolToggle === true) {
+                    console.log("hi");
+                    accumulatedBudget = 
+                    boolToggle = false;
+                }
+                
                 accumulatedBudget += dailyBudget - totalExpensesForDay;
 
                 dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>$${Math.max(0, accumulatedBudget).toFixed(2)}`;
