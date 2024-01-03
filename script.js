@@ -18,9 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ... Other event listeners ...
 
     function updateCalendar() {
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        document.getElementById('month-year-display').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+        // ... existing setup for month and day names ...
 
         let calendarDaysElement = document.getElementById('calendar-days');
         calendarDaysElement.innerHTML = '';
@@ -30,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (firstDayOfMonth < lastCalculatedDate || !lastCalculatedDate) {
             accumulatedBudget = 0;
-            lastCalculatedDate = new Date(startDate);
             let tempDate = new Date(startDate);
             while (tempDate < firstDayOfMonth) {
                 let tempDateString = tempDate.toISOString().split('T')[0];
@@ -38,6 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     return expense.date === tempDateString ? total + expense.amount : total;
                 }, 0);
                 accumulatedBudget += dailyBudget - dailyExpenses;
+                tempDate.setDate(tempDate.getDate() + 1);
+            }
+            lastCalculatedDate = new Date(firstDayOfMonth);
+        } else if (firstDayOfMonth > lastCalculatedDate) {
+            // Adjust accumulatedBudget for days between lastCalculatedDate and firstDayOfMonth
+            let tempDate = new Date(lastCalculatedDate);
+            while (tempDate < firstDayOfMonth) {
+                accumulatedBudget += dailyBudget;
                 tempDate.setDate(tempDate.getDate() + 1);
             }
         }
@@ -53,13 +58,16 @@ document.addEventListener('DOMContentLoaded', function() {
             let dayElement = document.createElement('div');
             dayElement.classList.add('day');
 
-            if (currentDate >= startDate && (!lastCalculatedDate || currentDate >= lastCalculatedDate)) {
+            if (currentDate >= startDate) {
                 let dayString = currentDate.toISOString().split('T')[0];
                 let totalExpensesForDay = expenses.reduce((total, expense) => {
                     return expense.date === dayString ? total + expense.amount : total;
                 }, 0);
 
-                accumulatedBudget += dailyBudget - totalExpensesForDay;
+                if (currentDate.getTime() === lastCalculatedDate.getTime()) {
+                    accumulatedBudget += dailyBudget - totalExpensesForDay;
+                }
+
                 lastCalculatedDate = currentDate;
 
                 dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>$${accumulatedBudget.toFixed(2)}`;
