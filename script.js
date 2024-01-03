@@ -5,30 +5,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
     let accumulatedBudget = 0;
-    let lastCalculatedDate = null;
 
     document.getElementById('set-budget').addEventListener('click', function() {
         startDate = new Date(document.getElementById('start-date').value + 'T00:00:00');
         dailyBudget = parseFloat(document.getElementById('daily-budget').value);
-        accumulatedBudget = 0;
-        lastCalculatedDate = new Date(startDate);
         updateCalendar();
     });
-	
-document.getElementById('add-expense').addEventListener('click', function() {
-    const expenseName = document.getElementById('expense-name').value;
-    const expenseAmount = parseFloat(document.getElementById('expense-amount').value);
-    let expenseDateInput = document.getElementById('expense-date').value;
-    let expenseDate = new Date(expenseDateInput + 'T00:00:00'); // Normalize expense date
 
-    expenses.push({
-        name: expenseName,
-        amount: expenseAmount,
-        date: expenseDate.toISOString().split('T')[0]
+    document.getElementById('add-expense').addEventListener('click', function() {
+        const expenseName = document.getElementById('expense-name').value;
+        const expenseAmount = parseFloat(document.getElementById('expense-amount').value);
+        let expenseDateInput = document.getElementById('expense-date').value;
+        let expenseDate = new Date(expenseDateInput + 'T00:00:00');
+
+        expenses.push({
+            name: expenseName,
+            amount: expenseAmount,
+            date: expenseDate.toISOString().split('T')[0]
+        });
+
+        updateCalendar();
     });
-
-    updateCalendar();
-});
 
     document.getElementById('prev-month').addEventListener('click', function() {
         changeMonth(-1);
@@ -61,20 +58,13 @@ document.getElementById('add-expense').addEventListener('click', function() {
         let firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-        // Check if the calendar is set back to before the last calculated date
-        if (firstDayOfMonth < lastCalculatedDate) {
-            // If so, recalculate the accumulated budget from the start date
-            accumulatedBudget = 0;
-            let tempDate = new Date(startDate);
-            while (tempDate < firstDayOfMonth) {
-                let tempDateString = tempDate.toISOString().split('T')[0];
-                let dailyExpenses = expenses.reduce((total, expense) => {
-                    return expense.date === tempDateString ? total + expense.amount : total;
-                }, 0);
-                accumulatedBudget += dailyBudget - dailyExpenses;
-                tempDate.setDate(tempDate.getDate() + 1);
-            }
-            lastCalculatedDate = new Date(firstDayOfMonth);
+        accumulatedBudget = 0;
+        let tempDate = new Date(startDate);
+        while (tempDate < firstDayOfMonth && tempDate < new Date()) {
+            let tempDateString = tempDate.toISOString().split('T')[0];
+            let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
+            accumulatedBudget += dailyBudget - dailyExpenses;
+            tempDate.setDate(tempDate.getDate() + 1);
         }
 
         for (let i = 0; i < firstDayOfMonth.getDay(); i++) {
@@ -83,25 +73,21 @@ document.getElementById('add-expense').addEventListener('click', function() {
             calendarDaysElement.appendChild(placeholder);
         }
 
-       for (let day = 1; day <= daysInMonth; day++) {
+        for (let day = 1; day <= daysInMonth; day++) {
             let currentDate = new Date(currentYear, currentMonth, day);
             let dayElement = document.createElement('div');
             dayElement.classList.add('day');
 
-            if (currentDate >= startDate && currentDate > lastCalculatedDate) {
+            if (currentDate >= startDate && currentDate <= new Date()) {
                 let dayString = currentDate.toISOString().split('T')[0];
-                let totalExpensesForDay = expenses.reduce((total, expense) => {
-                    return expense.date === dayString ? total + expense.amount : total;
-                }, 0);
-
+                let totalExpensesForDay = expenses.filter(expense => expense.date === dayString).reduce((total, expense) => total + expense.amount, 0);
                 accumulatedBudget += dailyBudget - totalExpensesForDay;
-                lastCalculatedDate = currentDate;
 
-                dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>$${accumulatedBudget.toFixed(2)}`;
+                dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>$${Math.max(0, accumulatedBudget).toFixed(2)}`;
                 dayElement.addEventListener('click', function() {
                     openModal(currentDate);
                 });
-            } else if (currentDate < startDate) {
+            } else {
                 dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>`;
             }
 
@@ -118,12 +104,10 @@ document.getElementById('add-expense').addEventListener('click', function() {
         modalDate.innerText = `Expenses for ${date.toDateString()}`;
         modalExpensesList.innerHTML = '';
 
-        expenses.forEach(expense => {
-            if (expense.date === dateString) {
-                let li = document.createElement('li');
-                li.innerText = `${expense.name}: $${expense.amount.toFixed(2)}`;
-                modalExpensesList.appendChild(li);
-            }
+        expenses.filter(expense => expense.date === dateString).forEach(expense => {
+            let li = document.createElement('li');
+            li.innerText = `${expense.name}: $${expense.amount.toFixed(2)}`;
+            modalExpensesList.appendChild(li);
         });
 
         modal.style.display = 'block';
