@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let startDate = new Date();
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
-    let accumulatedBudget = 0;
 
     document.getElementById('set-budget').addEventListener('click', function() {
         startDate = new Date(document.getElementById('start-date').value + 'T00:00:00');
@@ -58,18 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
         let firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-        accumulatedBudget = 0;
+        let accumulatedBudget = 0;
         let tempDate = new Date(startDate);
 
-        // Calculate budget up to the end of the month being viewed
-        while (tempDate < firstDayOfMonth) {
-            tempDate.setDate(tempDate.getDate() + 1);
-        }
-
-        while (tempDate.getMonth() === currentMonth) {
+        while (tempDate <= new Date(currentYear, currentMonth, daysInMonth)) {
             let tempDateString = tempDate.toISOString().split('T')[0];
             let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
-            accumulatedBudget += dailyBudget - dailyExpenses;
+
+            if (tempDate >= startDate) {
+                accumulatedBudget += dailyBudget - dailyExpenses;
+            }
+
             tempDate.setDate(tempDate.getDate() + 1);
         }
 
@@ -79,6 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
             calendarDaysElement.appendChild(placeholder);
         }
 
+        accumulatedBudget = 0;
+        tempDate = new Date(startDate);
         for (let day = 1; day <= daysInMonth; day++) {
             let currentDate = new Date(currentYear, currentMonth, day);
             let dayElement = document.createElement('div');
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function closeModal() {
-        let modal is=document.getElementById('expense-modal');
+        let modal = document.getElementById('expense-modal');
         modal.style.display = 'none';
     }
 
