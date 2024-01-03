@@ -4,10 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let startDate = new Date();
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
+    let accumulatedBudget = 0;
+    let lastCalculatedDate = new Date();
 
     document.getElementById('set-budget').addEventListener('click', function() {
         startDate = new Date(document.getElementById('start-date').value + 'T00:00:00');
         dailyBudget = parseFloat(document.getElementById('daily-budget').value);
+        lastCalculatedDate = new Date(startDate);
+        accumulatedBudget = 0;
         updateCalendar();
     });
 
@@ -57,19 +61,28 @@ document.addEventListener('DOMContentLoaded', function() {
         let firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-        let accumulatedBudget = 0;
-        let tempDate = new Date(startDate);
-
-        while (tempDate <= new Date(currentYear, currentMonth, daysInMonth)) {
-            let tempDateString = tempDate.toISOString().split('T')[0];
-            let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
-
-            if (tempDate >= startDate) {
+        if (delta < 0) {
+            // Going to previous month: Recalculate from start date up to the first day of the previous month
+            accumulatedBudget = 0;
+            let tempDate = new Date(startDate);
+            while (tempDate < firstDayOfMonth) {
+                let tempDateString = tempDate.toISOString().split('T')[0];
+                let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
                 accumulatedBudget += dailyBudget - dailyExpenses;
+                tempDate.setDate(tempDate.getDate() + 1);
             }
-
-            tempDate.setDate(tempDate.getDate() + 1);
+        } else {
+            // Going to next month: Start from the last calculated date
+            let tempDate = new Date(lastCalculatedDate);
+            while (tempDate < firstDayOfMonth && tempDate < new Date()) {
+                let tempDateString = tempDate.toISOString().split('T')[0];
+                let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
+                accumulatedBudget += dailyBudget - dailyExpenses;
+                tempDate.setDate(tempDate.getDate() + 1);
+            }
         }
+
+        lastCalculatedDate = new Date(currentYear, currentMonth, 1);
 
         for (let i = 0; i < firstDayOfMonth.getDay(); i++) {
             let placeholder = document.createElement('div');
@@ -77,14 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
             calendarDaysElement.appendChild(placeholder);
         }
 
-        accumulatedBudget = 0;
-        tempDate = new Date(startDate);
         for (let day = 1; day <= daysInMonth; day++) {
             let currentDate = new Date(currentYear, currentMonth, day);
             let dayElement = document.createElement('div');
             dayElement.classList.add('day');
 
-            if (currentDate >= startDate) {
+            if (currentDate >= startDate && currentDate <= new Date()) {
                 let dayString = currentDate.toISOString().split('T')[0];
                 let totalExpensesForDay = expenses.filter(expense => expense.date === dayString).reduce((total, expense) => total + expense.amount, 0);
                 accumulatedBudget += dailyBudget - totalExpensesForDay;
