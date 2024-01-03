@@ -60,7 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         accumulatedBudget = 0;
         let tempDate = new Date(startDate);
-        while (tempDate < firstDayOfMonth && tempDate < new Date()) {
+
+        // Calculate budget up to the end of the month being viewed
+        while (tempDate < firstDayOfMonth) {
+            tempDate.setDate(tempDate.getDate() + 1);
+        }
+
+        while (tempDate.getMonth() === currentMonth) {
             let tempDateString = tempDate.toISOString().split('T')[0];
             let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
             accumulatedBudget += dailyBudget - dailyExpenses;
@@ -78,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let dayElement = document.createElement('div');
             dayElement.classList.add('day');
 
-            if (currentDate >= startDate && currentDate <= new Date()) {
+            if (currentDate >= startDate) {
                 let dayString = currentDate.toISOString().split('T')[0];
                 let totalExpensesForDay = expenses.filter(expense => expense.date === dayString).reduce((total, expense) => total + expense.amount, 0);
                 accumulatedBudget += dailyBudget - totalExpensesForDay;
@@ -114,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function closeModal() {
-        let modal = document.getElementById('expense-modal');
+        let modal is=document.getElementById('expense-modal');
         modal.style.display = 'none';
     }
 
