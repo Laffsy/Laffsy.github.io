@@ -1,0 +1,30 @@
+Create a website (using just html, css, js) to help budgeting and see how much can be spent daily and see how it compounds to each day based on remaining amount from expenses.
+
+User inputs date (Month day year), with daily budget amount, and clicks button to set budget
+
+example: user enters 01/01/2024 with daily budget $1.
+January 1 = $1
+January 2 = $2
+January 31 = $31
+February 1 = $32
+
+Calendar displays with the month in a typical calendar format of Sunday Monday Tuesday Wednesday Thursday Friday Saturday.
+Example: first day of December 2023 was Friday Dec 1. It should be reflected as showing the first day as Friday, but also have a blank for the days that were not used like a typical calendar. Sunday Monday Tuesday Wednesday Thursday (Friday) Saturday
+
+Based on user's budget start date and daily amount, start there. Any date before the date should have a blank amount, but still show the day.
+First date starts with the daily budget amount, and then the next day gets the daily budget added again (compounding or accumulated).
+
+User can also input expenses with expense name, expense amount, and expense date. 
+
+Based on user's expense input, the day should be subtracted using the expense amount.
+
+The user should be able to click on the date and a modal should appear showing a header for date, then items for expense name, expense amount
+
+The user should have the ability to go forward and backwards to see the various months to get an idea of how much money they can have.
+As user moves from month to month, The days should continue to compound on each other and also continue to factor in expenses. 
+
+Though dynamic would be nice, storing things in an array or table might be beneficial as well as this allows for the ability to import/export data.
+
+Any days with expenses should show as a different color on the calendar so you can see upcoming expenses or days that were charged.
+
+The user should be able to export the data into a csv so they can view it that way and have the ability to re-import the data.
