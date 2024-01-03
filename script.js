@@ -149,10 +149,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 //console.log('daystring = ' + dayString)
                 let totalExpensesForDay = expenses.filter(expense => expense.date === dayString).reduce((total, expense) => total + expense.amount, 0);
                 //console.log('toalExpensesForDay = ' + totalExpensesForDay)
+                
                 if (boolToggle === true) {
-                    console.log("hi");
-                    accumulatedBudget = 
+                    accumulatedBudget = 0
                     boolToggle = false;
+
                 }
                 
                 accumulatedBudget += dailyBudget - totalExpensesForDay;
