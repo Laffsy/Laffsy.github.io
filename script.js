@@ -325,22 +325,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function exportToCSV() {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Start Date,Daily Budget,Expense Date,Expense Name,Expense Amount\n"; // Add headers
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Start Date,Daily Budget,Expense Date,Expense Name,Expense Amount\n"; // Add headers
 
-        // Assuming startDate is a variable holding the start date of the budget
+    // Check if there are any expenses
+    if (expenses.length > 0) {
+        // If there are expenses, include them in the export
         expenses.forEach(expense => {
-            csvContent += `${startDate},${dailyBudget},${expense.date},${expense.name},${expense.amount}\n`;
+            csvContent += `${startDate.toISOString()},${dailyBudget},${expense.date},${expense.name},${expense.amount}\n`;
         });
-
-        // Encode and trigger download
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "my_budget_data.csv");
-        document.body.appendChild(link); // Required for FF
-        link.click();
+    } else {
+        // If there are no expenses, still include the start date and daily budget
+        csvContent += `${startDate.toISOString()},${dailyBudget},,,\n`;
     }
+
+    // Encode and trigger download
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_budget_data.csv");
+    document.body.appendChild(link); // Required for FF
+    link.click();
+}
+
 
 
 
