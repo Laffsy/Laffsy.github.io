@@ -1,7 +1,7 @@
 /* General Body Styling */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
+    line-height: 1.4;
     margin: 0;
     padding: 0;
     background: #f4f4f4;
@@ -11,38 +11,47 @@ body {
     min-height: 100vh; /* Full viewport height */
 }
 
+.day-date {
+    position: absolute; /* Enable absolute positioning within the day cell */
+    top: 5px;           /* Distance from the top of the cell */
+    right: 5px;         /* Distance from the right of the cell */
+    font-size: 0.75em;  /* Adjust the font size as needed */
+}
 
 /* Header */
 header {
     background: #333;
     color: #fff;
-    padding: 1rem 0;
     text-align: center;
 }
 
 /* Main Content */
 main {
-    padding: 20px;
-    flex: 1; /* Expand to fill available space */
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the top */
 }
 
 /* Section Styling */
 section {
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Reduced margin */
 }
 
 /* Input and Button Styling */
 input[type="number"],
-input[type="text"] {
-    padding: 10px;
-    margin-right: 10px;
-    width: 200px;
+input[type="text"],
+input[type="date"] {
+    padding: 8px;
+    margin-right: 5px;
+    width: 180px;
     border-radius: 5px;
     border: 1px solid #ddd;
 }
 
 button {
-    padding: 10px 15px;
+    padding: 8px 12px;
     background: #333;
     color: #fff;
     border: none;
@@ -56,52 +65,73 @@ button:hover {
 
 /* Budget Display */
 #budget-status, #calendar-view {
-    padding: 20px;
+    padding: 10px; /* Reduced padding */
     background: #fff;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 5px; /* Reduced margin */
 }
 
 /* Footer */
 footer {
     text-align: center;
-    padding: 20px;
     background: #333;
     color: #fff;
+    font-size: 12px; /* Smaller font size */
 }
 
-
+/* Calendar View Styling */
 #calendar-view {
-    margin-top: 20px;
+    flex-grow: 1; /* Allows calendar view to expand and fill available space */
+    display: flex;
+    flex-direction: column;
 }
 
 #calendar-days {
+    flex-grow: 1; /* Allows calendar days grid to expand */
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 days in a week */
-    gap: 10px;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for days */
+    gap: 5px;
+    overflow: auto; /* You can adjust or remove this depending on the desired behavior */
 }
+
 
 .day {
-    padding: 10px;
+
     background: #e7e7e7;
     text-align: center;
-    border-radius: 5px;
+    
+	min-height: 70px;
+	position: relative; /* Set the day cell to relative for positioning context */
+
 }
+
 
 #budget-display {
-    margin-bottom: 40px; /* Add more space at the bottom */
+    margin-bottom: 20px;
 }
 
+/* Month Navigation */
 #month-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0;
+}
+
+#month-year-display {
+    width: 180px;
     text-align: center;
-    margin-bottom: 10px;
+}
+
+#prev-month, #next-month {
+    margin: 0 10px;
 }
 
 #month-navigation button {
     margin: 0 10px;
 }
 
-
+/* Modal Styling */
 .modal {
     display: none;
     position: fixed;
@@ -134,4 +164,106 @@ footer {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* Highlight days with expenses */
+.day-with-expense {
+    background-color: #FFD700;
+}
+
+/* Responsive Font Sizes */
+h1, h2, p {
+    font-size: 16px; /* Fixed font size for larger screens */
+}
+
+@media (max-width: 600px) {
+    /* Adjustments for smaller screens */
+    h1, h2, p {
+        font-size: 4vw; /* Increase font size for better readability on small screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    header, footer {
+        padding: 0.5rem;
+    }
+
+    main {
+        padding: 5px;
+    }
+
+    section {
+        margin-bottom: 10px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="date"],
+    button {
+        width: 100%; /* Full width for smaller screens */
+        margin: 5px 0; /* Stack inputs vertically with margin */
+    }
+
+    #calendar-view {
+        height: auto; /* Let calendar height be dynamic */
+    }
+
+    #calendar-days {
+        gap: 1px;
+    }
+
+    .day {
+        padding: 2px; /* Reduce padding */
+        font-size: 12px; /* Smaller font size */
+    }
+	
+	.day::before {
+        content: attr(data-day); /* Use a data attribute for day names */
+        display: block;
+        font-size: 10px; /* Even smaller font size for day names */
+    }
+	
+	
+
+
+    .modal-content {
+        width: 90%; /* Modal takes up more screen space */
+    }
+}
+
+/* iPhone X and similar (375px) */
+@media screen and (max-width: 375px) {
+    h1, h2, p {
+        font-size: 14px; /* Smaller font size */
+    }
+
+    #month-navigation {
+        flex-direction: column; /* Stack navigation buttons */
+    }
+
+    #month-year-display {
+        margin: 5px 0;
+    }
+}
+
+/* Samsung Galaxy and similar (360px) */
+@media screen and (max-width: 360px) {
+    h1, h2, p {
+        font-size: 13px; /* Even smaller font size */
+    }
+
+    /* Additional styles if needed */
+}
+
+#weekdays-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 days in a week */
+    text-align: center;
+    background-color: #e7e7e7; /* Or any color of your choice */
+    padding: 5px 0;
+}
+
+.weekday {
+    padding: 5px;
+    border-radius: 5px;
 }
