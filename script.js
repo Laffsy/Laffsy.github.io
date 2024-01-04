@@ -328,16 +328,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let csvContent = "data:text/csv;charset=utf-8,";
     csvContent += "Start Date,Daily Budget,Expense Date,Expense Name,Expense Amount\n"; // Add headers
 
-    // Check if there are any expenses
-    if (expenses.length > 0) {
-        // If there are expenses, include them in the export
-        expenses.forEach(expense => {
-            csvContent += `${startDate.toISOString()},${dailyBudget},${expense.date},${expense.name},${expense.amount}\n`;
-        });
-    } else {
-        // If there are no expenses, still include the start date and daily budget
-        csvContent += `${startDate.toISOString()},${dailyBudget},,,\n`;
-    }
+    // Add first line for start date and daily budget
+    csvContent += `${startDate.toISOString()},${dailyBudget},,,\n`;
+
+    // Add expenses in subsequent lines
+    expenses.forEach(expense => {
+        csvContent += `,,${expense.date},${expense.name || ''},${expense.amount}\n`;
+    });
 
     // Encode and trigger download
     var encodedUri = encodeURI(csvContent);
@@ -347,6 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(link); // Required for FF
     link.click();
 }
+
 
 
 
