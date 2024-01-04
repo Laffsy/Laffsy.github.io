@@ -27,9 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset accumulated budget and last calculated date
         accumulatedBudget = 0;
         lastCalculatedDate = new Date(startDate);
-        console.log("Setting the budget. The start date is " + startDate + ". The daily budget is " + dailyBudget + ". The lastCalculatedDate is " + lastCalculatedDate + ". Now executing updateCalendar();")
+        currentMonth = startDate.getMonth();
+		currentYear = startDate.getFullYear();
         // Update the calendar view
-        updateCalendar();
+        
+        updateCalendar(); // Update calendar only if startDate is set
+        
     });
 
     // Event listener for adding an expense
@@ -86,10 +89,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update the calendar view
     function updateCalendar() {
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const dayNames = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
         
         // Set the current month and year display
         document.getElementById('month-year-display').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+		
+		// if (!startDate) {
+            // // Handle empty calendar state, e.g., display a message or leave the calendar blank
+            // document.getElementById('month-year-display').innerText = 'Please set a start date and budget';
+            // document.getElementById('calendar-days').innerHTML = '';
+            // return; // Exit the function early
+        // }
 
         // Clear the previous calendar view
         let calendarDaysElement = document.getElementById('calendar-days');
@@ -135,11 +145,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Create calendar day elements
-        console.log("days in month: " + daysInMonth)
         for (let day = 1; day <= daysInMonth; day++) {
             let currentDate = new Date(currentYear, currentMonth, day);
             let dayElement = document.createElement('div');
             dayElement.classList.add('day');
+			
+			
+			let dayString = currentDate.toISOString().split('T')[0];
+    let hasExpenses = expenses.some(expense => expense.date === dayString);
+
+    // Apply a different class if the day has expenses
+    if (hasExpenses) {
+        dayElement.classList.add('day-with-expense');
+    }
 
             // Calculate and display the budget for each day
             
@@ -158,16 +176,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 accumulatedBudget += dailyBudget - totalExpensesForDay;
 
-                dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>$${Math.max(0, accumulatedBudget).toFixed(2)}`;
+                //dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>$${Math.max(0, accumulatedBudget).toFixed(2)}`;
+				dayElement.innerHTML = `<span class="day-date">${day}</span><br>$${accumulatedBudget.toFixed(2)}`;
                 dayElement.addEventListener('click', function() {
                     openModal(currentDate);
                 });
             } else {
-                dayElement.innerHTML = `<strong>${dayNames[currentDate.getDay()]}, Day ${day}</strong><br>`;
+                dayElement.innerHTML = `<span class="day-date">${day}</span><br>`;
             }
 
             calendarDaysElement.appendChild(dayElement);
         }
+		
+		
     }
 
     // Function to open the modal showing expenses for a specific day
@@ -187,7 +208,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         modal.style.display = 'block';
-        console.log("Opening Modal");
+		
+		window.addEventListener('click', function(event) {
+            let modal = document.getElementById('expense-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+		
+		let modalContent = document.getElementsByClassName('modal-content')[0];
+    modalContent.addEventListener('click', function(event) {
+        event.stopPropagation(); // Stops the click from propagating to the window
+    });
+		
+		
     }
 
     // Function to close the modal
@@ -196,6 +230,8 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'none';
         console.log("Modal closed.");
     }
+	
+	
 
     // Event listener to close the modal
     document.getElementsByClassName('close')[0].addEventListener('click', closeModal);
