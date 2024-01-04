@@ -11,26 +11,35 @@
         <h1>Daily Budget Manager</h1>
     </header>
     <main>
+	
         <!-- Section to set the daily budget -->
         <section id="budget-setter">
     <h2>Set Your Start Date and Daily Budget</h2>
     <input type="date" id="start-date" value="2024-01-01">
-    <input type="number" id="daily-budget" placeholder="Enter your daily budget" value="32">
+    <input type="number" id="daily-budget" required min="0" step="0.01" placeholder="Enter your daily budget" value="33">
+
     <button id="set-budget">Set Budget</button>
 </section>
+
 
         <!-- Section to add expenses -->
        <section id="expense-tracker">
     <h2>Add an Expense</h2>
     <input type="text" id="expense-name" placeholder="Expense Name">
-    <input type="number" id="expense-amount" placeholder="Amount">
+    <input type="number" id="expense-amount" required min="0" step="0.01" placeholder="Amount">
     <input type="date" id="expense-date" placeholder="Date of Expense">
     <button id="add-expense">Add Expense</button>
+</section>
+<section id="csv-import">
+    <input type="file" id="import-csv" accept=".csv">
+	
 </section>
 
 		
 		<section id="budget-display">
+		
     <h2>Daily Budget Overview</h2>
+	
     <div id="calendar-view">
     <div id="month-navigation">
         <button id="prev-month">&lt; Prev</button>
@@ -50,7 +59,11 @@
         <!-- Calendar days will be dynamically populated -->
     </div>
 </div>
+
+
 </section>
+
+<button id="export-csv">Export to CSV</button>
 
 <div id="expense-modal" class="modal">
     <div class="modal-content">
