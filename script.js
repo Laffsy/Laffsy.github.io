@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCalendar(); // Update the calendar view to reflect the loaded data
         };
         reader.onerror = function(error) {
-            console.log("Error reading file:", error);
+            // console.log("Error reading file:", error);
         };
         reader.readAsText(file);
     }
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             date: expenseDate.toISOString().split('T')[0]
         });
 
-        console.log("Expense added. Running updateCalendar();");
+        // console.log("Expense added. Running updateCalendar();");
 
         // Update the calendar view
         updateCalendar();
@@ -137,26 +137,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listeners for navigating between months
     document.getElementById('prev-month').addEventListener('click', function() {
-        console.log("Going to previous month.")
+        // console.log("Going to previous month.")
         changeMonth(-1); // Go to the previous month
     });
 
     document.getElementById('next-month').addEventListener('click', function() {
-        console.log("Going to next month.")
+        // console.log("Going to next month.")
         changeMonth(1); // Go to the next month
     });
 
     // Function to change the current month and update the calendar
     function changeMonth(delta) {
-        console.log("Current month = " + currentMonth + ". Adding/Subtracting: " + delta + " which equals = " + (currentMonth + delta));
+        // console.log("Current month = " + currentMonth + ". Adding/Subtracting: " + delta + " which equals = " + (currentMonth + delta));
         currentMonth += delta;
         // Adjust year and month for year change
         if (currentMonth < 0) {
-            console.log("going to prior year");
+            // console.log("going to prior year");
             currentMonth = 11;
             currentYear--;
         } else if (currentMonth > 11) {
-            console.log("going to next year");
+            // console.log("going to next year");
             currentMonth = 0;
             currentYear++;
         }
@@ -193,16 +193,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // console.log("first day of month is " + firstDayOfMonth)
 
             if (tempDate < firstDayOfMonth) {
-                console.log("tempDate (" + tempDate + ") " + "LESSTHAN" + "( " + firstDayOfMonth + ")")
+                // console.log("tempDate (" + tempDate + ") " + "LESSTHAN" + "( " + firstDayOfMonth + ")")
             }
 
             while (tempDate < firstDayOfMonth) {
 
                 let tempDateString = tempDate.toISOString().split('T')[0];
                 let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
-                //console.log("HI " + accumulatedBudget);
+                // console.log("HI " + accumulatedBudget);
                 accumulatedBudget += dailyBudget - dailyExpenses;
-                //console.log(accumulatedBudget);
+                // console.log(accumulatedBudget);
                 tempDate.setDate(tempDate.getDate() + 1);
             }
             // console.log("final accumulated date is after comparing first day vs temp date: " + accumulatedBudget)
@@ -239,11 +239,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Calculate and display the budget for each day
 
             if (currentDate >= startDate) {
-                console.log('currentDate >= startDate');
+                // console.log('currentDate >= startDate');
                 let dayString = currentDate.toISOString().split('T')[0];
-                //console.log('daystring = ' + dayString)
+                // console.log('daystring = ' + dayString)
                 let totalExpensesForDay = expenses.filter(expense => expense.date === dayString).reduce((total, expense) => total + expense.amount, 0);
-                //console.log('toalExpensesForDay = ' + totalExpensesForDay)
+                // console.log('toalExpensesForDay = ' + totalExpensesForDay)
 
                 if (boolToggle === true) {
                     accumulatedBudget = 0;
@@ -253,16 +253,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     // console.log("first day of month is " + firstDayOfMonth)
 
                     if (tempDate < firstDayOfMonth) {
-                        console.log("tempDate (" + tempDate + ") " + "LESSTHAN" + "( " + firstDayOfMonth + ")")
+                        // console.log("tempDate (" + tempDate + ") " + "LESSTHAN" + "( " + firstDayOfMonth + ")")
                     }
 
                     while (tempDate < firstDayOfMonth) {
 
                         let tempDateString = tempDate.toISOString().split('T')[0];
                         let dailyExpenses = expenses.filter(expense => expense.date === tempDateString).reduce((total, expense) => total + expense.amount, 0);
-                        //console.log("HI " + accumulatedBudget);
+                        // console.log("HI " + accumulatedBudget);
                         accumulatedBudget += dailyBudget - dailyExpenses;
-                        //console.log(accumulatedBudget);
+                        // console.log(accumulatedBudget);
                         tempDate.setDate(tempDate.getDate() + 1);
                     }
                 }
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeModal() {
         let modal = document.getElementById('expense-modal');
         modal.style.display = 'none';
-        console.log("Modal closed.");
+        // console.log("Modal closed.");
     }
 
     function exportToCSV() {
