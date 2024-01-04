@@ -11,6 +11,24 @@ body {
     min-height: 100vh; /* Full viewport height */
 }
 
+/* #export-csv, #import-csv { */
+    /* display: block; */
+    /* margin: 10px auto; */
+    /* padding: 5px 10px; */
+    /* font-size: 1em; */
+    /* cursor: pointer; */
+/* } */
+
+#export-csv {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+#import-csv {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
 .day-date {
     position: absolute; /* Enable absolute positioning within the day cell */
     top: 5px;           /* Distance from the top of the cell */
