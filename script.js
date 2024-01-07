@@ -75,6 +75,75 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         reader.readAsText(file);
     }
+	
+	 function parseCSVDataString(csvString) {
+    try {
+        expenses = []; // Clear existing expenses
+        let lines = csvString.trim().split('\n');
+        // Skip the first line (header) and start processing from the second line
+        for (let i = 1; i < lines.length; i++) {
+            let lineData = lines[i].split(',');
+            // Process only if lineData has enough fields
+            if (lineData.length >= 5) {
+                let [loadedStartDate, loadedDailyBudget, date, name, amount] = lineData;
+                // For the first line of actual data, set startDate and dailyBudget
+                if (i === 1) {
+                    startDate = new Date(loadedStartDate);
+                    dailyBudget = parseFloat(loadedDailyBudget);
+                    // Update currentMonth and currentYear based on the imported startDate
+                    currentMonth = startDate.getMonth();
+                    currentYear = startDate.getFullYear();
+                }
+                // Process expenses
+                if (date && amount) {
+                    expenses.push({ date, name, amount: parseFloat(amount) });
+                }
+            }
+        }
+        accumulatedBudget = 0;
+        lastCalculatedDate = new Date(startDate);
+        updateCalendar(); // Update the calendar view
+    } catch (error) {
+        console.error("Error parsing CSV data: ", error);
+    }
+}
+
+
+
+document.getElementById('load-data').addEventListener('click', function() {
+    let csvString = document.getElementById('import-textarea').value;
+    parseCSVDataString(csvString);
+    updateCalendar(); // Make sure this function exists and is correctly updating the UI
+    console.log("Data Loaded");
+});
+
+
+    function serializeDataToCSV() {
+        let csvString = `Start Date,Daily Budget,Expense Date,Expense Name,Expense Amount\n`;
+        csvString += `${startDate.toISOString()},${dailyBudget},,,\n`;
+
+        expenses.forEach(expense => {
+            csvString += `,,${expense.date},${expense.name},${expense.amount}\n`;
+        });
+
+        return csvString;
+    }
+
+
+
+
+
+    // Add event listeners
+    document.getElementById('generate-data').addEventListener('click', function() {
+        document.getElementById('export-textarea').value = serializeDataToCSV();
+    });
+
+    document.getElementById('load-data').addEventListener('click', function() {
+        let csvString = document.getElementById('import-textarea').value;
+        parseCSVDataString(csvString);
+         // Update the calendar view with the new data
+    });
+
 
 
 
@@ -234,6 +303,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Apply a different class if the day has expenses
             if (hasExpenses) {
                 dayElement.classList.add('day-with-expense');
+				dayElement.addEventListener('click', function() {
+                openModal(currentDate);
+            });
             }
 
             // Calculate and display the budget for each day
@@ -325,27 +397,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function exportToCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Start Date,Daily Budget,Expense Date,Expense Name,Expense Amount\n"; // Add headers
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Start Date,Daily Budget,Expense Date,Expense Name,Expense Amount\n"; // Add headers
 
-    // Add first line for start date and daily budget
-    csvContent += `${startDate.toISOString()},${dailyBudget},,,\n`;
+        // Add first line for start date and daily budget
+        csvContent += `${startDate.toISOString()},${dailyBudget},,,\n`;
 
-    // Add expenses in subsequent lines
-    expenses.forEach(expense => {
-        csvContent += `,,${expense.date},${expense.name || ''},${expense.amount}\n`;
-    });
+        // Add expenses in subsequent lines
+        expenses.forEach(expense => {
+            csvContent += `,,${expense.date},${expense.name || ''},${expense.amount}\n`;
+        });
 
-    // Encode and trigger download
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "my_budget_data.csv");
-    document.body.appendChild(link); // Required for FF
-    link.click();
-}
-
-
+        // Encode and trigger download
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_budget_data.csv");
+        document.body.appendChild(link); // Required for FF
+        link.click();
+    }
 
 
 
