@@ -285,3 +285,43 @@ h1, h2, p {
     padding: 5px;
     border-radius: 5px;
 }
+
+/* Style for the text areas */
+textarea {
+  width: 100%; /* Set to full width */
+  height: 100px; /* Set a fixed height */
+  padding: 10px; /* Add some padding */
+  margin: 10px 0; /* Add some space above and below */
+  border: 1px solid #ccc; /* A light grey border */
+  border-radius: 5px; /* Rounded corners */
+  box-sizing: border-box; /* Include padding in the width */
+  font-family: Arial, sans-serif; /* Set the font */
+}
+
+/* Style for the buttons */
+button {
+  padding: 10px 20px; /* Add some padding */
+  margin-right: 10px; /* Add some space to the right */
+  border: none; /* Remove the default border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #333; /* A dark background color */
+  color: white; /* White text */
+  cursor: pointer; /* A pointer cursor on hover */
+  font-family: Arial, sans-serif; /* Set the font */
+}
+
+button:hover {
+  background-color: #555; /* Slightly lighter on hover */
+}
+
+/* You may want to add a container around your text areas and buttons for better alignment */
+#data-management {
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: column; /* Stack them vertically */
+  align-items: flex-start; /* Align items to the start */
+  gap: 10px; /* Add space between elements */
+  padding: 20px; /* Add some padding around */
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 5px; /* Add rounded corners */
+}
+
